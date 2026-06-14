@@ -1,0 +1,42 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 24px;
+}
+
+section {
+  margin-bottom: 32px;
+}
+
+form div {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+input,
+textarea {
+  padding: 6px;
+  width: 300px;
+}
+
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+table {
+  margin-top: 12px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+}
+
+#message {
+  font-weight: bold;
+}
