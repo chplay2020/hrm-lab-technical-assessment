@@ -97,6 +97,9 @@ frontend/index.html
 ```
 
 You can also use VS Code Live Server.
+```txt
+http://localhost:5500/frontend/index.html
+```
 
 ## API Examples
 
