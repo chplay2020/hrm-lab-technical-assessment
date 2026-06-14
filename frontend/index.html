@@ -1,110 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HRM Management System</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HRM Management System</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-  <body>
-    <h1>HRM Management System</h1>
+    <body>
+        <div class="container">
+            <h1>HRM Management System</h1>
 
-    <!-- Add employee form -->
-    <section>
-      <h2>Add New Employee</h2>
+            <!-- Add employee form -->
+            <section class="card">
+                <h2>Add New Employee</h2>
 
-      <form id="employeeForm">
-        <div>
-          <label for="employeeName">Name</label>
-          <input type="text" id="employeeName" required />
+                <form id="employeeForm">
+                    <div class="form-group">
+                        <label for="employeeName">Name</label>
+                        <input
+                            type="text"
+                            id="employeeName"
+                            placeholder="Enter employee name"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employeeDepartment">Department</label>
+                        <input
+                            type="text"
+                            id="employeeDepartment"
+                            placeholder="Enter department"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employeeLeaveBalance">Leave Balance</label>
+                        <input
+                            type="number"
+                            id="employeeLeaveBalance"
+                            placeholder="Enter leave balance"
+                            min="0"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit">Add Employee</button>
+                </form>
+            </section>
+
+            <!-- Employee list -->
+            <section class="card">
+                <div class="section-header">
+                    <h2>Employees</h2>
+                    <button id="loadEmployeesBtn">View All Employees</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Leave Balance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="employeeTableBody"></tbody>
+                </table>
+            </section>
+
+            <!-- Leave request form -->
+            <section class="card">
+                <h2>Create Leave Request</h2>
+
+                <form id="leaveForm">
+                    <div class="form-group">
+                        <label for="leaveEmployeeId">Employee ID</label>
+                        <input
+                            type="text"
+                            id="leaveEmployeeId"
+                            placeholder="Enter employee ID"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="leaveStartDate">Start Date</label>
+                        <input type="date" id="leaveStartDate" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="leaveEndDate">End Date</label>
+                        <input type="date" id="leaveEndDate" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="leaveReason">Reason</label>
+                        <textarea
+                            id="leaveReason"
+                            placeholder="Enter reason"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button type="submit">Create Leave Request</button>
+                </form>
+            </section>
+
+            <!-- Leave request list -->
+            <section class="card">
+                <div class="section-header">
+                    <h2>Leave Requests</h2>
+                    <button id="loadLeavesBtn">View All Leave Requests</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Employee ID</th>
+                            <th>Employee Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Reason</th>
+
+                            <!-- Bonus: show leave request status -->
+                            <th>Status</th>
+                            <!-- Bonus: approve leave request from frontend -->
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="leaveTableBody"></tbody>
+                </table>
+            </section>
+
+            <p id="message"></p>
         </div>
 
-        <div>
-          <label for="employeeDepartment">Department</label>
-          <input type="text" id="employeeDepartment" required />
-        </div>
-
-        <div>
-          <label for="employeeLeaveBalance">Leave Balance</label>
-          <input type="number" id="employeeLeaveBalance" required />
-        </div>
-
-        <button type="submit">Add Employee</button>
-      </form>
-    </section>
-
-    <!-- Employee list -->
-    <section>
-      <h2>Employees</h2>
-      <button id="loadEmployeesBtn">View All Employees</button>
-
-      <table border="1">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Leave Balance</th>
-          </tr>
-        </thead>
-
-        <tbody id="employeeTableBody"></tbody>
-      </table>
-    </section>
-
-    <!-- Leave request form -->
-    <section>
-      <h2>Create Leave Request</h2>
-
-      <form id="leaveForm">
-        <div>
-          <label for="leaveEmployeeId">Employee ID</label>
-          <input type="text" id="leaveEmployeeId" required />
-        </div>
-
-        <div>
-          <label for="leaveStartDate">Start Date</label>
-          <input type="date" id="leaveStartDate" required />
-        </div>
-
-        <div>
-          <label for="leaveEndDate">End Date</label>
-          <input type="date" id="leaveEndDate" required />
-        </div>
-
-        <div>
-          <label for="leaveReason">Reason</label>
-          <textarea id="leaveReason" required></textarea>
-        </div>
-
-        <button type="submit">Create Leave Request</button>
-      </form>
-    </section>
-
-    <!-- Leave request list -->
-    <section>
-      <h2>Leave Requests</h2>
-      <button id="loadLeavesBtn">View All Leave Requests</button>
-
-      <table border="1">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Employee ID</th>
-            <th>Employee Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Reason</th>
-          </tr>
-        </thead>
-
-        <tbody id="leaveTableBody"></tbody>
-      </table>
-    </section>
-
-    <p id="message"></p>
-
-    <script src="script.js"></script>
-  </body>
+        <script src="script.js"></script>
+    </body>
 </html>

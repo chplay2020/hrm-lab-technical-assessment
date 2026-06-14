@@ -13,9 +13,16 @@ const leaveTableBody = document.getElementById("leaveTableBody");
 
 const message = document.getElementById("message");
 
-// Show simple message on the page
-function showMessage(text) {
-  message.textContent = text;
+// Show message on the page
+function showMessage(text, type = "success") {
+    message.textContent = text;
+    message.className = type;
+
+    // Bonus: clear message after a few seconds
+    setTimeout(() => {
+        message.textContent = "";
+        message.className = "";
+    }, 3000);
 }
 
 
@@ -38,12 +45,18 @@ async function loadEmployees() {
             <td>${employee.name}</td>
             <td>${employee.department}</td>
             <td>${employee.leaveBalance}</td>
+            <td>
+                <button class="danger" onclick="deleteEmployee('${employee.id}')">
+                    Delete
+                </button>
+            </td>
         `;
 
         employeeTableBody.appendChild(row);
-        });
+    });
+
     } catch (error) {
-        showMessage("Failed to load employees");
+        showMessage("Failed to load employees", "error");
     }
 }
 
@@ -63,28 +76,58 @@ employeeForm.addEventListener("submit", async (event) => {
 
     try {
         const response = await fetch(`${API_URL}/employees`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newEmployee),
-    });
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newEmployee),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
-        showMessage(data.message || "Failed to add employee");
+        if (!response.ok) {
+        showMessage(data.message || "Failed to add employee", "error");
+        return;
+        }
+
+        employeeForm.reset();
+        showMessage("Employee added successfully", "success");
+
+        loadEmployees();
+
+    } catch (error) {
+        showMessage("Failed to add employee", "error");
+    }
+});
+
+// Bonus: delete employee from the frontend
+// This function calls the required DELETE /employees/:id API
+async function deleteEmployee(id) {
+    const confirmDelete = confirm("Are you sure you want to delete this employee?");
+
+    if (!confirmDelete) {
         return;
     }
 
-    employeeForm.reset();
-    showMessage("Employee added successfully");
+    try {
+        const response = await fetch(`${API_URL}/employees/${id}`, {
+            method: "DELETE",
+        });
 
-    loadEmployees();
+        const data = await response.json();
+
+        if (!response.ok) {
+        showMessage(data.message || "Failed to delete employee", "error");
+        return;
+        }
+
+        showMessage("Employee deleted successfully", "success");
+        loadEmployees();
+
     } catch (error) {
-        showMessage("Failed to add employee");
+        showMessage("Failed to delete employee", "error");
     }
-});
+}
 
 loadEmployeesBtn.addEventListener("click", loadEmployees);
 
@@ -102,20 +145,31 @@ async function loadLeaveRequests() {
         leaveRequests.forEach((leave) => {
             const row = document.createElement("tr");
 
-        row.innerHTML = `
-            <td>${leave.id}</td>
-            <td>${leave.employeeId}</td>
-            <td>${leave.employeeName}</td>
-            <td>${leave.startDate}</td>
-            <td>${leave.endDate}</td>
-            <td>${leave.reason}</td>
-        `;
+            row.innerHTML = `
+                <td>${leave.id}</td>
+                <td>${leave.employeeId}</td>
+                <td>${leave.employeeName}</td>
+                <td>${leave.startDate}</td>
+                <td>${leave.endDate}</td>
+                <td>${leave.reason}</td>
+                <td>
+                    <span class="status ${leave.status}">
+                        ${leave.status}
+                    </span>
+                </td>
+                <td>
+                    ${
+                        leave.status === "pending"
+                        ? `<button class="success" onclick="approveLeave('${leave.id}')">Approve</button>`
+                        : "-"
+                    }
+                </td>
+            `;
 
-        leaveTableBody.appendChild(row);
-    });
-
+            leaveTableBody.appendChild(row);
+        });
     } catch (error) {
-        showMessage("Failed to load leave requests");
+        showMessage("Failed to load leave requests", "error");
     }
 }
 
@@ -139,29 +193,49 @@ leaveForm.addEventListener("submit", async (event) => {
         const response = await fetch(`${API_URL}/leave`, {
             method: "POST",
             headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newLeaveRequest),
-    });
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newLeaveRequest),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
-        showMessage(data.message || "Failed to create leave request");
-        return;
-    }
+        if (!response.ok) {
+            showMessage(data.message || "Failed to create leave request", "error");
+            return;
+        }
 
-    leaveForm.reset();
-    showMessage("Leave request created successfully");
+        leaveForm.reset();
+        showMessage("Leave request created successfully", "success");
 
-    // Reload both tables because employee leaveBalance is changed
-    loadEmployees();
-    loadLeaveRequests();
-    
+        // Reload both tables because employee leaveBalance is changed
+        loadEmployees();
+        loadLeaveRequests();
     } catch (error) {
-        showMessage("Failed to create leave request");
+        showMessage("Failed to create leave request", "error");
     }
 });
+
+// Bonus: approve a leave request
+async function approveLeave(id) {
+    try {
+        const response = await fetch(`${API_URL}/leave/${id}/approve`, {
+            method: "PATCH",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showMessage(data.message || "Failed to approve leave request", "error");
+            return;
+        }
+
+        showMessage("Leave request approved successfully", "success");
+        loadLeaveRequests();
+    } catch (error) {
+        showMessage("Failed to approve leave request", "error");
+    }
+}
 
 loadLeavesBtn.addEventListener("click", loadLeaveRequests);
 
